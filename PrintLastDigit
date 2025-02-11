@@ -1,0 +1,9 @@
+class PrintLastDigit
+{
+public static void main(String args[])
+{
+int num = 23456;
+n = num % 10;
+System.out.println(n)
+}
+}
