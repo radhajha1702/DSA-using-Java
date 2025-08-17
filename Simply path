@@ -1,0 +1,27 @@
+import java.util.*;
+
+class Solution {
+    public String simplifyPath(String path) {
+        Deque<String> stack = new ArrayDeque<>();
+        String[] tokens = path.split("/");
+
+        for (String token : tokens) {
+            if (token.equals("") || token.equals(".")) {
+                continue; // ignore empty and current directory
+            } else if (token.equals("..")) {
+                if (!stack.isEmpty()) {
+                    stack.pollLast(); // move up if not at root
+                }
+            } else {
+                stack.offerLast(token); // valid directory/file name
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String dir : stack) {
+            sb.append("/").append(dir);
+        }
+        // If stack is empty, we're at root
+        return sb.length() == 0 ? "/" : sb.toString();
+    }
+}
