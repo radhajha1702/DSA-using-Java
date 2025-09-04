@@ -1,0 +1,27 @@
+class Solution {
+    public int numDecodings(String s) {
+        int n = s.length();
+        if (n == 0 || s.charAt(0) == '0') return 0;
+
+        int[] dp = new int[n + 1];
+        dp[0] = 1; // Base case: empty string has one way
+        dp[1] = 1; // First char is guaranteed nonzero (from above)
+
+        for (int i = 2; i <= n; i++) {
+            char curr = s.charAt(i - 1);
+            char prev = s.charAt(i - 2);
+
+            // Single digit decode: not '0'
+            if (curr != '0') {
+                dp[i] += dp[i - 1];
+            }
+
+            // Two digit decode: valid number between 10 and 26
+            int twoDigit = (prev - '0') * 10 + (curr - '0');
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i - 2];
+            }
+        }
+        return dp[n];
+    }
+}
