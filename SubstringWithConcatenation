@@ -1,0 +1,52 @@
+import java.util.*;
+
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> res = new ArrayList<>();
+        if (words.length == 0 || s.length() < words.length * words[0].length()) return res;
+
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+        int totalLen = wordLen * wordCount;
+
+        Map<String, Integer> wordMap = new HashMap<>();
+        for (String w : words) wordMap.put(w, wordMap.getOrDefault(w, 0) + 1);
+
+        // Loop over wordLen offsets to catch all window positions
+        for (int offset = 0; offset < wordLen; offset++) {
+            int left = offset, right = offset, matched = 0;
+            Map<String, Integer> currMap = new HashMap<>();
+            
+            while (right + wordLen <= s.length()) {
+                String word = s.substring(right, right + wordLen);
+                right += wordLen;
+
+                // If it's a valid word
+                if (wordMap.containsKey(word)) {
+                    currMap.put(word, currMap.getOrDefault(word, 0) + 1);
+                    matched++;
+
+                    // Too many of this word in window
+                    while (currMap.get(word) > wordMap.get(word)) {
+                        String leftWord = s.substring(left, left + wordLen);
+                        currMap.put(leftWord, currMap.get(leftWord) - 1);
+                        left += wordLen;
+                        matched--;
+                    }
+
+                    // All words matched
+                    if (matched == wordCount) {
+                        res.add(left);
+                    }
+
+                } else {
+                    // Reset window
+                    currMap.clear();
+                    matched = 0;
+                    left = right;
+                }
+            }
+        }
+        return res;
+    }
+}
