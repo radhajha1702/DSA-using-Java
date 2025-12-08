@@ -1,0 +1,40 @@
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int sLen = s.length();
+        int pLen = p.length();
+        int sIdx = 0, pIdx = 0;
+        int starIdx = -1;
+        int match = 0;
+
+        while (sIdx < sLen) {
+            // Case 1: Characters match OR '?'
+            if (pIdx < pLen && (p.charAt(pIdx) == '?' || p.charAt(pIdx) == s.charAt(sIdx))) {
+                sIdx++;
+                pIdx++;
+            }
+            // Case 2: '*' encountered in pattern
+            else if (pIdx < pLen && p.charAt(pIdx) == '*') {
+                starIdx = pIdx;
+                match = sIdx;
+                pIdx++;
+            }
+            // Case 3: Pattern does not match → backtrack if star existed
+            else if (starIdx != -1) {
+                pIdx = starIdx + 1;
+                match++;
+                sIdx = match;
+            }
+            // No match and no '*' to adjust
+            else {
+                return false;
+            }
+        }
+
+        // Check remaining characters in pattern
+        while (pIdx < pLen && p.charAt(pIdx) == '*') {
+            pIdx++;
+        }
+
+        return pIdx == pLen;
+    }
+}
