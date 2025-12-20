@@ -1,0 +1,41 @@
+class Solution {
+    public boolean isNumber(String s) {
+
+        s = s.trim();
+
+        boolean seenDigit = false;
+        boolean seenDot = false;
+        boolean seenE = false;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (Character.isDigit(c)) {
+                seenDigit = true;
+            }
+            else if (c == '+' || c == '-') {
+                // Sign allowed only at start or right after e/E
+                if (i > 0 && s.charAt(i - 1) != 'e' && s.charAt(i - 1) != 'E')
+                    return false;
+            }
+            else if (c == '.') {
+                // Dot not allowed after e or if already seen
+                if (seenDot || seenE)
+                    return false;
+                seenDot = true;
+            }
+            else if (c == 'e' || c == 'E') {
+                // e must appear once and only after a digit
+                if (seenE || !seenDigit)
+                    return false;
+                seenE = true;
+                seenDigit = false; // reset for digits after e
+            }
+            else {
+                return false;
+            }
+        }
+
+        return seenDigit;
+    }
+}
